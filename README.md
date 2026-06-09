@@ -28,10 +28,21 @@ cp .env.example .env
 docker compose up --build
 ```
 
+On a fresh database volume, Docker runs all SQL files in `sql/` automatically:
+
+- `sql/init.sql`
+- `sql/sample_test_data.sql`
+
 Health check:
 
 ```bash
 curl http://localhost:8000/health
+```
+
+Load or refresh sample test data on an existing database volume:
+
+```bash
+docker compose exec -T db psql -U raguser -d ragdb < sql/sample_test_data.sql
 ```
 
 Ingest from GCS:
