@@ -18,7 +18,7 @@ def stats():
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    if settings.gemini_api_key == "replace_with_your_gemini_api_key":
+    if not settings.gemini_api_key.strip() or settings.gemini_api_key == "replace_with_your_gemini_api_key":
         return {
             "question": request.question,
             "rewritten_question": request.question,

@@ -27,8 +27,6 @@ services:
       - .env
     ports:
       - "${API_PORT:-8000}:8000"
-    volumes:
-      - ./service-account.json:/app/service-account.json:ro
 
 volumes:
   pgdata:
