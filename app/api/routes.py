@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+from google.genai.errors import APIError
+from app.core.config import settings
 from app.models.schemas import ChatRequest, ChatResponse, FeedbackRequest, IngestResponse
 from app.rag.graph import rag_graph
 from app.services.db_service import count_documents, insert_feedback
@@ -16,16 +18,33 @@ def stats():
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    result = rag_graph.invoke({
-        "question": request.question,
-        "user_id": request.user_id,
-        "department": request.department,
-        "access_groups": request.access_groups,
-        "rewritten_question": "",
-        "retrieved_docs": [],
-        "reranked_docs": [],
-        "answer": "",
-    })
+    if settings.gemini_api_key == "replace_with_your_gemini_api_key":
+        return {
+            "question": request.question,
+            "rewritten_question": request.question,
+            "answer": "I am still working on it... Please wait till Gemini agree to work with me :-)",
+            "sources": [],
+        }
+
+    try:
+        result = rag_graph.invoke({
+            "question": request.question,
+            "user_id": request.user_id,
+            "department": request.department,
+            "access_groups": request.access_groups,
+            "rewritten_question": "",
+            "retrieved_docs": [],
+            "reranked_docs": [],
+            "answer": "",
+        })
+    except APIError as exc:
+        return {
+            "question": request.question,
+            "rewritten_question": request.question,
+            "answer": f"Gemini is not ready to answer yet: {exc}",
+            "sources": [],
+        }
+
     return {"question": request.question, "rewritten_question": result["rewritten_question"], "answer": result["answer"], "sources": result["reranked_docs"]}
 
 @router.post("/ingest/gcs", response_model=IngestResponse)

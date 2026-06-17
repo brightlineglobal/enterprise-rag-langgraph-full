@@ -23,19 +23,21 @@ def rerank_docs(state: RAGState) -> dict:
 def generate_answer(state: RAGState) -> dict:
     if not state["reranked_docs"]:
         return {"answer": "I could not find this in the knowledge base."}
+
     blocks = []
     for i, doc in enumerate(state["reranked_docs"], start=1):
+        metadata = doc.get("metadata") or {}
+        chunk_text = doc.get("chunk_text") or ""
         blocks.append(f"""
 [Source {i}]
 File: {doc.get('source_file')}
 Title: {doc.get('title')}
-Metadata: {doc.get('metadata')}
+Metadata: {metadata}
 Content:
-{doc.get('chunk_text')}
+{chunk_text}
 """)
-    prompt = ANSWER_PROMPT.format(context="
 
-".join(blocks), question=state["question"])
+    prompt = ANSWER_PROMPT.format(context="\n\n".join(blocks), question=state["question"])
     return {"answer": gemini_service.generate_text(prompt).strip()}
 
 workflow = StateGraph(RAGState)

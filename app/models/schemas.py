@@ -1,20 +1,20 @@
-from typing import Any
+from typing import Any, Optional
 from pydantic import BaseModel, Field
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=2)
-    user_id: str | None = None
-    department: str | None = None
+    user_id: Optional[str] = None
+    department: Optional[str] = None
     access_groups: list[str] = Field(default_factory=list)
 
 class SourceDocument(BaseModel):
     id: int
     source_file: str
-    title: str | None = None
+    title: Optional[str] = None
     chunk_text: str
     metadata: dict[str, Any] = Field(default_factory=dict)
-    similarity: float | None = None
-    rerank_score: float | None = None
+    similarity: Optional[float] = None
+    rerank_score: Optional[float] = None
 
 class ChatResponse(BaseModel):
     question: str
@@ -25,9 +25,9 @@ class ChatResponse(BaseModel):
 class FeedbackRequest(BaseModel):
     question: str
     answer: str
-    rating: int | None = Field(default=None, ge=1, le=5)
-    comment: str | None = None
-    user_id: str | None = None
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    comment: Optional[str] = None
+    user_id: Optional[str] = None
 
 class IngestResponse(BaseModel):
     message: str

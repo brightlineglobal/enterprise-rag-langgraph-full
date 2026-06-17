@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enterprise RAG Searchbot</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="side-panel" aria-label="Session controls">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">R</span>
+          <div>
+            <h1>Enterprise RAG Searchbot</h1>
+            <p>Knowledge base assistant</p>
+          </div>
+        </div>
+
+        <form class="context-form" id="context-form">
+          <label>
+            User ID
+            <input id="user-id" name="user_id" autocomplete="username" placeholder="gilman" />
+          </label>
+          <label>
+            Department
+            <input id="department" name="department" placeholder="IT" />
+          </label>
+          <label>
+            Access groups
+            <input id="access-groups" name="access_groups" placeholder="hr, engineering" />
+          </label>
+        </form>
+
+        <section class="status-box" aria-live="polite">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">Ready</span>
+        </section>
+      </aside>
+
+      <section class="chat-panel" aria-label="Chat">
+        <div class="messages" id="messages" aria-live="polite">
+          <article class="message assistant">
+            <div class="message-meta">Assistant</div>
+            <p>Ask a question from your enterprise knowledge base.</p>
+          </article>
+        </div>
+
+        <form class="composer" id="chat-form">
+          <textarea
+            id="question"
+            name="question"
+            rows="1"
+            minlength="2"
+            placeholder="How do I request VPN access?"
+            required
+          ></textarea>
+          <button type="submit" id="send-button" aria-label="Send question">
+            <span aria-hidden="true">Send</span>
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <template id="message-template">
+      <article class="message">
+        <div class="message-meta"></div>
+        <div class="message-body"></div>
+      </article>
+    </template>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
